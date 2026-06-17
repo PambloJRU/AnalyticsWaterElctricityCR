@@ -37,8 +37,8 @@ def render_optimizacion():
             df_temporal = df_tarifas[df_tarifas['empresa'] != 'TOTAL NACIONAL']
             capacidad_total = int(df_temporal['ventas'].sum())
             st.markdown("---")
-            demanda_objetivo = st.slider("Demanda Objetivo a Satisfacer:", min_value=int(capacidad_total * 0.1), max_value=capacidad_total, value=int(capacidad_total * 0.6), step=50000)
-            st.info(f"Capacidad Máxima Nacional Instalada: **{capacidad_total:,.0f}**")
+            demanda_objetivo = st.slider("Demanda Objetivo a Satisfacer: (kWh)", min_value=int(capacidad_total * 0.1), max_value=capacidad_total, value=int(capacidad_total * 0.6), step=50000)
+            st.info(f"Capacidad Máxima Nacional Instalada: **{capacidad_total:,.0f} kWh**")
 
     with col_resultados:
         if df_tarifas is not None:
@@ -46,7 +46,7 @@ def render_optimizacion():
 
             if resultado.success:
                 c1, c2 = st.columns(2)
-                c1.metric("Demanda Satisfecha", f"{demanda_objetivo:,.0f} und")
+                c1.metric("Demanda Satisfecha", f"{demanda_objetivo:,.0f} kWh")
                 c2.metric("Costo Total Minimizado", f"₡ {resultado.fun:,.2f}")
 
                 resultados_lista = []
@@ -55,13 +55,15 @@ def render_optimizacion():
                     resultados_lista.append({
                         "Empresa": empresas[i],
                         "Costo Unitario (₡)": round(costos[i], 2),
-                        "Asignación Óptima": asignacion,
+                        "Asignación Óptima kWh": asignacion,
                         "Capacidad Libre": capacidades[i] - asignacion
                     })
 
                 df_res = pd.DataFrame(resultados_lista)
-                st.bar_chart(df_res.set_index("Empresa")[["Asignación Óptima", "Capacidad Libre"]])
+                st.bar_chart(df_res.set_index("Empresa")[["Asignación Óptima kWh", "Capacidad Libre"]])
                 with st.expander("Ver Desglose Operativo Completo"):
-                    st.dataframe(df_res[["Empresa", "Costo Unitario (₡)", "Asignación Óptima"]], hide_index=True)
+                    st.dataframe(df_res[["Empresa", "Costo Unitario (₡)", "Asignación Óptima kWh"]], hide_index=True)
+                    num_cols = df_res.select_dtypes(include="number").columns
+                    st.dataframe(df_res.style.highlight_max(axis=0, subset=num_cols))
             else:
                 st.error("❌ El modelo no encontró solución. Revise la demanda vs capacidad instalada.")
