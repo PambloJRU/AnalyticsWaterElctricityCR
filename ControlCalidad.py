@@ -52,7 +52,7 @@ def _graficar_carta_c_historica(df, empresa, sigma=3):
     
     return fig, fuera_de_control, c_mean, lsc
 
-def render_control_calidad2():
+def render_control_calidad():
     st.header("Control Estadístico de Calidad (Distribución de Poisson)")
     st.markdown("Monitoreo **semestral histórico** de Quejas por Problemas de Calidad de Tensión e Interrupciones.")
     

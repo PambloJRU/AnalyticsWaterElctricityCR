@@ -2,7 +2,7 @@ import streamlit as st
 from Pronosticos import render_pronosticos
 from Optimizacion import render_optimizacion
 from TeoriaColas import render_teoria_colas
-from ControlCalidad import render_control_calidad2
+from ControlCalidad import render_control_calidad
 
 st.set_page_config(page_title="Dashboard ARESEP", layout="wide", page_icon="⚡")
 st.title("Dashboard Analítico ARESEP: Servicios Públicos")
@@ -22,7 +22,7 @@ with tab_optimizacion:
     render_optimizacion()
 
 with tab_control:
-    render_control_calidad2()
+    render_control_calidad()
 
 with tab_colas:
     render_teoria_colas()
